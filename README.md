@@ -5,11 +5,10 @@ This a skeliton git post receive hook using [Python](http://www.python.org/), [F
 ###Setup
 ```sh
 #Install needed software
-sudo aptitude install build-essential python python-pip python-dev
-sudo pip install Flask
+sudo aptitude install build-essential python python-pip python-dev supervisor
+sudo pip install Werkzeug Flask
 sudo pip install http://projects.unbit.it/downloads/uwsgi-lts.tar.gz
 sudo pip install simplejson
-sudo aptitude install supervisor
 
 
 #Setup Logging directories
@@ -66,13 +65,14 @@ server {
 In debian-based systems, you install application configuration in the `/etc/supervisor/conf.d` directory. The configuration for our `githook` app would look like:
 ```
 [program:githook]
-command=uwsgi --ini /path/to/githook.ini
-directory=/path/to/githook
+command=uwsgi --ini /path/to/git_hook/githook.ini
+directory=/path/to/git_hook/githook.ini
+numprocs=1
 autostart=true
 autorestart=true
-stdout_logfile=/path/to/githook/logs/uwsgi-supervisord.log
+stdout_logfile=/var/log/supervisor/githook-supervisord.log
 redirect_stderr=true
-stopsignal=QUIT
+stopsignal=INT
 ```
 
 
